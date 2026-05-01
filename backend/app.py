@@ -157,5 +157,5 @@ def static_f(p): return send_from_directory(FRONT,p)
 
 if __name__=="__main__":
     run_etl()
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    log.info("http://localhost:5000")
+    app.run(host="0.0.0.0",port=5000,debug=False)
