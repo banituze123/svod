@@ -108,8 +108,7 @@ function renderTop(data){
   //   const dom=LOGOS[d.actor];
   //   return `<span class="logo-strip-item">${dom?`<img src="${fav(dom)}" alt="" onerror="this.style.display='none'">`:`<span class="dot" style="background:${PAL[i%PAL.length]}"></span>`}${d.actor}</span>`;
   // }).join('');
-}
-/* ── Decline ── */
+}/* ── Declining ── */
 function renderDeclining(data){
   const ctx=$('c-declining'); if(!ctx||!data?.length)return; destroy('declining');
   const sorted=[...data].sort((a,b)=>a.pct-b.pct);
@@ -119,10 +118,10 @@ function renderDeclining(data){
       backgroundColor:sorted.map(()=> 'rgba(192,57,43,.82)'), borderWidth:0, borderRadius:2 }] },
     options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{
-        label:c=>`  Change: ${c.raw}%`,
-        afterLabel:c=>{ const d=sorted[c.dataIndex]; return [`  Start: ${fmt(d.v_first)} (${d.d_first})`,`  End: ${fmt(d.v_last)} (${d.d_last})`]; }
+        label:c=>`  Decline: ${c.raw}%`,
+        afterLabel:c=>{ const d=sorted[c.dataIndex]; return [`  Start: ${fmt(d.v_first)} (${d.d_first})`,' → ',`  End: ${fmt(d.v_last)} (${d.d_last})`]; }
       }}} ,
-      scales:{ x:{grid:{color:'rgba(0,0,0,0.04)'}, ticks:{callback:v=>v+'%',font:{size:10}}, max:0},
+      scales:{ x:{grid:{color:'rgba(0,0,0,0.04)'}, ticks:{callback:v=>v+'%',font:{size:10}}},
                y:{grid:{display:false},ticks:{font:{size:10}}} } }
   });
 }
