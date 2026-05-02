@@ -471,7 +471,8 @@ img { max-width: 100%; }
 .btn-ghost:hover  { border-color: var(--orange); color: var(--orange); }
 
 /* 2 col chart grid */
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.chart-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; align-items: start; }
+.chart-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; align-items: start; }
 .chart-card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -481,8 +482,21 @@ img { max-width: 100%; }
 .chart-card:hover { box-shadow: 0 4px 16px rgba(8,48,80,.1); border-color: rgba(247,148,31,.35); }
 .chart-card h3 { font-size: 14.5px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
 .chart-card .sub { font-size: 11.5px; color: #999; margin-bottom: 18px; }
-.chart-box  { position: relative; height: 280px; }
-.chart-box.tall { height: 360px; }
+.chart-box        { position: relative; height: 280px; }
+.chart-box.tall   { height: 360px; }
+/* Scrollable: outer container caps height, inner canvas can grow */
+.chart-box.scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px;
+  height: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #F7941F #f0f0f0;
+}
+.chart-box.scroll::-webkit-scrollbar       { width: 5px; }
+.chart-box.scroll::-webkit-scrollbar-track { background: #f0f0f0; }
+.chart-box.scroll::-webkit-scrollbar-thumb { background: #F7941F; border-radius: 3px; }
+.chart-box.scroll canvas { display: block; width: 100% !important; }
 .chart-source { font-size: 10px; color: #ccc; text-align: right; margin-top: 8px; font-style: italic; }
 
 /* Logo strip */
@@ -710,6 +724,7 @@ table.dx tbody td.name { font-weight: 700; color: var(--navy); }
   .rh-top    { grid-template-columns: 1fr; }
   .rh-cards  { grid-template-columns: 1fr 1fr; }
   .chart-row { grid-template-columns: 1fr; }
+  .chart-row-3 { grid-template-columns: 1fr 1fr; }
   .footer-cols { grid-template-columns: repeat(2,1fr); }
   .seg-cards { grid-template-columns: repeat(3,1fr); }
 }
@@ -717,6 +732,7 @@ table.dx tbody td.name { font-weight: 700; color: var(--navy); }
   .header-nav-bar { overflow-x: auto; }
   .wwd-layout { grid-template-columns: 1fr; }
   .rh-cards   { grid-template-columns: 1fr; }
+  .chart-row-3 { grid-template-columns: 1fr; }
   .news-grid  { grid-template-columns: 1fr; }
   .donut-wrap { grid-template-columns: 1fr; height: auto; }
   .seg-cards  { grid-template-columns: repeat(2,1fr); }

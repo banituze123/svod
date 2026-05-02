@@ -220,19 +220,7 @@ function renderShare(data){
   const ctx=$('c-share'); if(!ctx)return; destroy('share');
   const t8=data.platforms.slice(0,8), oth=data.platforms.slice(8).reduce((s,p)=>s+p.value,0);
   const items=[...t8,{actor:'All Others',value:oth,pct:+(oth/data.total*100).toFixed(2)}];
-
-  /* Distinct donut palette — aligned with Image 2 brand colors */
-  const cols = [
-    '#083050',  // Amazon Prime Video  — Dataxis dark navy
-    '#E50914',  // Netflix             — Netflix RED  (matches Image 2 line)
-    '#3DBB6C',  // Hulu                — Hulu green
-    '#0168EF',  // Paramount+          — Paramount electric blue
-    '#4A90D9',  // Disney+             — Cornflower blue  (matches Image 2 line)
-    '#808080',  // Apple TV+           — Gray  (matches Image 2 line)
-    '#E67E22',  // ESPN D2C            — Orange
-    '#8B5CF6',  // HBO Max (2020-2023) — Purple  (distinct from green Hulu)
-    '#BDC3C7',  // All Others          — Light neutral gray
-  ];
+  const cols=[...PAL.slice(0,8),'#aab'];
   charts.share = new Chart(ctx,{
     type:'doughnut',
     data:{ labels:items.map(d=>d.actor), datasets:[{ data:items.map(d=>d.value),
@@ -296,7 +284,7 @@ function renderRH(market, top, growth, trendRaw){
     new Chart(c2,{
       type:'bar',
       data:{ labels:t5.map(d=>d.actor), datasets:[{ data:t5.map(d=>d.subs),
-        backgroundColor:['#083050','#E50914','#3DBB6C','#0168EF','#0D2481'], borderWidth:0, borderRadius:3 }] },
+        backgroundColor:PAL.slice(0,5), borderWidth:0, borderRadius:3 }] },
       options:{ responsive:true, maintainAspectRatio:false,
         plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>'  '+fmt(c.raw)+' subscribers'}} },
         scales:{
@@ -306,14 +294,14 @@ function renderRH(market, top, growth, trendRaw){
       }
     });
     /* Icon + name strip — rendered in HTML outside canvas */
-    const top5Cols=['#083050','#E50914','#3DBB6C','#0168EF','#0D2481'];
     const strip=$('rh-top5-icons');
     if(strip) strip.innerHTML=t5.map((d,i)=>{
       const dom=LOGOS[d.actor];
+      // Short display name: first word only for space
       const shortName = d.actor.split(' ')[0];
       const icon=dom
         ?`<img src="${fav(dom)}" title="${d.actor}" style="width:22px;height:22px;border-radius:3px;border:1px solid #ddd;display:block;margin:0 auto 3px;" onerror="this.style.display='none'">`
-        :`<span style="width:22px;height:22px;border-radius:3px;background:${top5Cols[i]};display:block;margin:0 auto 3px;"></span>`;
+        :`<span style="width:22px;height:22px;border-radius:3px;background:${PAL[i]};display:block;margin:0 auto 3px;"></span>`;
       return `<div style="text-align:center;flex:1;">${icon}<span style="font-size:9px;font-weight:700;color:#555;display:block;line-height:1.2;">${shortName}</span></div>`;
     }).join('');
   }
