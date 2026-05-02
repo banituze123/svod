@@ -133,7 +133,18 @@ function renderShare(data){
   const ctx=$('c-share'); if(!ctx)return; destroy('share');
   const t8=data.platforms.slice(0,8), oth=data.platforms.slice(8).reduce((s,p)=>s+p.value,0);
   const items=[...t8,{actor:'All Others',value:oth,pct:+(oth/data.total*100).toFixed(2)}];
-  const cols=[...PAL.slice(0,8),'#aab'];
+
+  const cols = [
+    '#083050',  // Amazon Prime Video 
+    '#E50914',  // Netflix             
+    '#3DBB6C',  // Hulu               
+    '#0168EF',  // Paramount+          
+    '#4A90D9',  // Disney+             
+    '#808080',  // Apple TV+           
+    '#E67E22',  // ESPN D2C            
+    '#8B5CF6',  // HBO Max (2020-2023) 
+    '#BDC3C7',  // All Others          
+  ];
   charts.share = new Chart(ctx,{
     type:'doughnut',
     data:{ labels:items.map(d=>d.actor), datasets:[{ data:items.map(d=>d.value),
