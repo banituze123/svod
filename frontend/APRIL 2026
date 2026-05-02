@@ -180,8 +180,8 @@
         <canvas id="rh-market"></canvas>
       </div>
       <div class="rh-featured-text">
-        <div class="rh-date">APRIL 2026</div>
-        <h3>Amazon &amp; Netflix anchor a market that grew 37.0% — from 372.6M to 510.3M subscribers</h3>
+        <!-- <div class="rh-date">APRIL 2026</div> -->
+        <h3>Amazon &amp; Netflix anchor a market that grew 37.0%, from 372.6M to 510.3M subscribers</h3>
         <p>The US SVOD aggregate subscriber pool grew from 372.6M in Q1 2021 to 510.3M by Q4 2022 (+37.0% full period; +15.3% YoY EOY 2021→2022), with Amazon Prime Video (98.8M) and Netflix (67.0M) as dominant anchors.</p>
         <p style="margin-top:12px;font-size:13px;color:#999;">Source: Dataxis</p>
       </div>
@@ -196,7 +196,7 @@
         <!-- Icon + name strip — OUTSIDE the canvas, no overlap -->
         <div id="rh-top5-icons" style="display:flex;justify-content:space-around;align-items:center;padding:6px 12px;border-top:1px solid #eee;background:#fafafa;"></div>
         <div class="rh-card-body">
-          <div class="rh-date">APRIL 2026</div>
+          <!-- <div class="rh-date">APRIL 2026</div> -->
           <h4>Top 5 platforms hold 59.2% of all US SVOD subscriptions in Q4 2022</h4>
           <p>Amazon (98.8M), Netflix (67M), Hulu (48M), Paramount+ (46.3M) and Disney+ (41.9M) collectively dominate the landscape.</p>
         </div>
@@ -206,7 +206,7 @@
           <canvas id="rh-growth"></canvas>
         </div>
         <div class="rh-card-body">
-          <div class="rh-date">APRIL 2026</div>
+          <!-- <div class="rh-date">APRIL 2026</div> -->
           <h4>Fox Nation led YoY growth at +133.1% — Peacock Premium +131.2% — Screambox +107.4%</h4>
           <p>Top YoY growth leaders (Q4 2021 → Q4 2022): Fox Nation (+133.1%), Peacock Premium (+131.2%), Screambox (+107.4%), Crunchyroll (+83.6%), Dropout (+75.7%) and BET+ (+74.6%).</p>
         </div>
@@ -216,7 +216,7 @@
           <canvas id="rh-netflix"></canvas>
         </div>
         <div class="rh-card-body">
-          <div class="rh-date">APRIL 2026</div>
+          <!-- <div class="rh-date">APRIL 2026</div> -->
           <h4>Netflix held flat at 67.0M while Peacock Premium grew +131.2% YoY — a market inflection point</h4>
           <p>Netflix peaked at 67.8M (Q4 2021) and recovered to only 67.0M by Q4 2022, while Peacock (+131.2%), Paramount+ (+47.8%) and Apple TV+ (+21.9%) each posted strong YoY gains.</p>
         </div>
