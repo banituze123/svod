@@ -109,7 +109,47 @@ function renderTop(data){
   //   return `<span class="logo-strip-item">${dom?`<img src="${fav(dom)}" alt="" onerror="this.style.display='none'">`:`<span class="dot" style="background:${PAL[i%PAL.length]}"></span>`}${d.actor}</span>`;
   // }).join('');
 }
+/* ── Declining platforms ── */
+function renderDeclining(data){
+  const ctx=$('c-declining'); if(!ctx||!data||!data.length)return; destroy('declining');
+  const sorted=[...data].sort((a,b)=>a.pct-b.pct);
+  /* Use CSS .tall height — consistent with growth chart in same row */
+  const wrap=ctx.closest('.chart-box');
+  if(wrap){ wrap.style.height=''; }
 
+  charts.declining = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels: sorted.map(d=>d.actor),
+      datasets:[{
+        data: sorted.map(d=>d.pct),
+        backgroundColor: sorted.map(()=>'rgba(192,57,43,.82)'),
+        borderWidth:0, borderRadius:2,
+        barPercentage:0.72, categoryPercentage:0.85,
+      }]
+    },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TT, callbacks:{
+          label: c=>`  Change: ${c.raw}%`,
+          afterLabel: c=>{
+            const d=sorted[c.dataIndex];
+            return [`  Start: ${fmt(d.v_first)} (${d.d_first})`, `  End: ${fmt(d.v_last)} (${d.d_last})`];
+          }
+        }}
+      },
+      scales:{
+        x:{
+          grid:{color:'rgba(0,0,0,0.04)'},
+          ticks:{callback:v=>v+'%', font:{size:9}},
+          max:0,
+        },
+        y:{grid:{display:false}, ticks:{font:{size:9}}}
+      }
+    }
+  });
+}
 /* ── Growth ── */
 function renderGrowth(data){
   const ctx=$('c-growth'); if(!ctx)return; destroy('growth');
