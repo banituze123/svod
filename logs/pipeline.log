@@ -60,3 +60,33 @@
 2026-05-02 17:08:29,019 [INFO] 172.18.0.198 - - [02/May/2026 17:08:29] "GET /api/segments HTTP/1.1" 200 -
 2026-05-02 17:08:29,020 [INFO] 172.18.0.198 - - [02/May/2026 17:08:29] "GET /api/trends?actors=Netflix,Peacock%20Premium,Paramount%2B,Apple%20TV%2B,Disney%2B HTTP/1.1" 200 -
 2026-05-02 17:08:29,042 [INFO] 172.18.0.198 - - [02/May/2026 17:08:29] "GET /api/declining HTTP/1.1" 200 -
+2026-05-02 17:12:43,715 [INFO] ETL: 951 rows
+2026-05-02 17:12:43,716 [INFO] http://localhost:5000
+2026-05-02 17:12:43,747 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.18.0.198:5000
+2026-05-02 17:12:43,747 [INFO] [33mPress CTRL+C to quit[0m
+2026-05-02 17:12:59,327 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "[36mGET / HTTP/1.1[0m" 304 -
+2026-05-02 17:12:59,360 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+2026-05-02 17:12:59,369 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "[36mGET /js/dashboard.js HTTP/1.1[0m" 304 -
+2026-05-02 17:12:59,484 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/market_total HTTP/1.1" 200 -
+2026-05-02 17:12:59,485 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/growth HTTP/1.1" 200 -
+2026-05-02 17:12:59,487 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/share HTTP/1.1" 200 -
+2026-05-02 17:12:59,496 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/top?n=15 HTTP/1.1" 200 -
+2026-05-02 17:12:59,498 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/kpis HTTP/1.1" 200 -
+2026-05-02 17:12:59,501 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/trends HTTP/1.1" 200 -
+2026-05-02 17:12:59,502 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/segments HTTP/1.1" 200 -
+2026-05-02 17:12:59,515 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/declining HTTP/1.1" 200 -
+2026-05-02 17:12:59,667 [INFO] 172.18.0.198 - - [02/May/2026 17:12:59] "GET /api/explorer?page=1&limit=20&sort=v22&order=desc HTTP/1.1" 200 -
+2026-05-02 17:13:07,390 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "[36mGET /report.html HTTP/1.1[0m" 304 -
+2026-05-02 17:13:07,421 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+2026-05-02 17:13:07,448 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/market_total HTTP/1.1" 200 -
+2026-05-02 17:13:07,451 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/growth HTTP/1.1" 200 -
+2026-05-02 17:13:07,456 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/share HTTP/1.1" 200 -
+2026-05-02 17:13:07,461 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/top?n=15 HTTP/1.1" 200 -
+2026-05-02 17:13:07,472 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/trends?actors=Netflix,Peacock%20Premium,Paramount%2B,Apple%20TV%2B,Disney%2B HTTP/1.1" 200 -
+2026-05-02 17:13:07,473 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/segments HTTP/1.1" 200 -
+2026-05-02 17:13:07,475 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/explorer?limit=15&sort=v22&order=desc HTTP/1.1" 200 -
+2026-05-02 17:13:07,477 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/trends?actors=Netflix,Peacock%20Premium,Amazon%20Prime%20Video HTTP/1.1" 200 -
+2026-05-02 17:13:07,492 [INFO] 172.18.0.198 - - [02/May/2026 17:13:07] "GET /api/declining HTTP/1.1" 200 -

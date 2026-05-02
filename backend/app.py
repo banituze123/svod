@@ -128,22 +128,53 @@ def api_explorer():
     order="ASC" if request.args.get("order","desc")=="asc" else "DESC"
     valid={"actor","v21","v22","added","pct"}
     if sort not in valid: sort="v22"
-    wh="WHERE a.actor LIKE ?" if q else ""; params=[f"%{q}%"] if q else []
+    wh="WHERE actor LIKE ?" if q else ""; params=[f"%{q}%"] if q else []
     con=db();cur=con.cursor()
-    cur.execute(f"""SELECT a.actor,a.value v21,b.value v22,(b.value-a.value) added,
-        ROUND((CAST(b.value AS REAL)-a.value)/a.value*100,1) pct
-        FROM (SELECT actor,value FROM svod WHERE fact_date='2021-03-31') a
-        JOIN (SELECT actor,value FROM svod WHERE fact_date='2022-12-31') b ON a.actor=b.actor
-        {wh} ORDER BY {sort} {order} LIMIT ? OFFSET ?""", params+[lim,(page-1)*lim])
+    # Use first and last available date per platform — shows ALL 131 platforms
+    cur.execute(f"""
+        SELECT actor, first_val v21, last_val v22,
+               (last_val - first_val) added,
+               CASE WHEN first_val > 0
+                    THEN ROUND((CAST(last_val AS REAL) - first_val) / first_val * 100, 1)
+                    ELSE NULL END pct
+        FROM (
+            SELECT s.actor,
+                   (SELECT value FROM svod WHERE actor=s.actor ORDER BY fact_date ASC  LIMIT 1) first_val,
+                   (SELECT value FROM svod WHERE actor=s.actor ORDER BY fact_date DESC LIMIT 1) last_val
+            FROM (SELECT DISTINCT actor FROM svod {wh}) s
+        )
+        ORDER BY {sort} {order}
+        LIMIT ? OFFSET ?
+    """, params + [lim, (page-1)*lim])
     rows=[dict(r) for r in cur.fetchall()]
-    cur.execute(f"""SELECT COUNT(*) n FROM
-        (SELECT actor FROM svod WHERE fact_date='2021-03-31') a
-        JOIN (SELECT actor FROM svod WHERE fact_date='2022-12-31') b ON a.actor=b.actor {wh}""",params)
+    cur.execute(f"SELECT COUNT(DISTINCT actor) n FROM svod {wh}", params)
     total=cur.fetchone()["n"]; con.close()
     return jsonify({"data":rows,"total":total,"page":page,"pages":-(-total//lim)})
 
-@app.route("/api/actors")
-def api_actors():
+@app.route("/api/declining")
+def api_declining():
+    """Platforms with net subscriber loss over their full tracked period."""
+    con=db();cur=con.cursor()
+    cur.execute("""
+        SELECT actor,
+          (SELECT value    FROM svod WHERE actor=s.actor ORDER BY fact_date ASC  LIMIT 1) v_first,
+          (SELECT value    FROM svod WHERE actor=s.actor ORDER BY fact_date DESC LIMIT 1) v_last,
+          (SELECT fact_date FROM svod WHERE actor=s.actor ORDER BY fact_date ASC  LIMIT 1) d_first,
+          (SELECT fact_date FROM svod WHERE actor=s.actor ORDER BY fact_date DESC LIMIT 1) d_last
+        FROM (SELECT DISTINCT actor FROM svod) s
+    """)
+    result=[]
+    for actor,v_first,v_last,d_first,d_last in cur.fetchall():
+        if v_first and v_first>0:
+            pct=round((v_last-v_first)/v_first*100,1)
+            if pct<0:
+                result.append({'actor':actor,'v_first':v_first,'v_last':v_last,
+                                'd_first':d_first,'d_last':d_last,'pct':pct})
+    result.sort(key=lambda x: x['pct'])
+    con.close()
+    return jsonify(result)
+
+
     con=db();cur=con.cursor()
     cur.execute("SELECT DISTINCT actor FROM svod ORDER BY actor")
     actors=[r["actor"] for r in cur.fetchall()]; con.close(); return jsonify(actors)
