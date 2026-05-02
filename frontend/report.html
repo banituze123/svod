@@ -280,10 +280,20 @@ async function init(){
   /* Share donut */
   const t8=share.platforms.slice(0,8),oth=share.platforms.slice(8).reduce((s,p)=>s+p.value,0);
   const items=[...t8,{actor:'All Others',value:oth,pct:+(oth/share.total*100).toFixed(2)}];
-  new Chart(document.getElementById('r-share'),{type:'doughnut',data:{labels:items.map(d=>d.actor),datasets:[{data:items.map(d=>d.value),backgroundColor:PAL,borderWidth:2,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${fmtM(c.raw)} (${items[c.dataIndex].pct}%)`}}}}});
+  const dCols=[
+    '#083050',  // Amazon Prime Video 
+    '#E50914',  // Netflix            
+    '#3DBB6C',  // Hulu            
+    '#0168EF',  // Paramount+          
+    '#4A90D9',  // Disney+         
+    '#808080',  // Apple TV+        
+    '#E67E22',  // ESPN D2C          
+    '#8B5CF6',  // HBO Max (2020-2023) 
+    '#BDC3C7',  // All Others         
+  ];
+  new Chart(document.getElementById('r-share'),{type:'doughnut',data:{labels:items.map(d=>d.actor),datasets:[{data:items.map(d=>d.value),backgroundColor:dCols,borderWidth:2,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${fmtM(c.raw)} (${items[c.dataIndex].pct}%)`}}}}});
   const sl=document.getElementById('r-share-leg');
-  if(sl)sl.innerHTML=items.map((d,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;"><span style="width:9px;height:9px;background:${PAL[i]};border-radius:2px;flex-shrink:0;"></span><span style="flex:1;font-size:10.5px;">${d.actor}</span><span style="font-size:10.5px;font-weight:700;">${d.pct}%</span></div>`).join('');
-
+  if(sl)sl.innerHTML=items.map((d,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;"><span style="width:9px;height:9px;background:${dCols[i]};border-radius:2px;flex-shrink:0;"></span><span style="flex:1;font-size:10.5px;">${d.actor}</span><span style="font-size:10.5px;font-weight:700;">${d.pct}%</span></div>`).join('');
   /* Growth bar */
   const g10=growth.slice(0,10);
   new Chart(document.getElementById('r-growth'),{type:'bar',data:{labels:g10.map(d=>d.actor),datasets:[{data:g10.map(d=>d.pct),backgroundColor:g10.map(d=>d.pct>=0?'rgba(26,158,92,.85)':'rgba(192,57,43,.85)'),borderWidth:0,borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw>0?'+':''}${c.raw}%`,afterLabel:c=>`  ${fmt(g10[c.dataIndex].v21)} → ${fmt(g10[c.dataIndex].v22)}`}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{callback:v=>v+'%',font:{size:8}}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
