@@ -37,7 +37,7 @@ const state = { page:1, sort:'v22', order:'desc', q:'' };
 /* ── Boot ── */
 document.addEventListener('DOMContentLoaded', async () => {
   initTabs();
-  const [kpis, market, top, growth, share, segs, trendData, declining] = await Promise.all([
+  const [kpis, market, top, growth, share, segs, trendData] = await Promise.all([
     fetch(`${BASE}/api/kpis`).then(r=>r.json()),
     fetch(`${BASE}/api/market_total`).then(r=>r.json()),
     fetch(`${BASE}/api/top?n=15`).then(r=>r.json()),
@@ -45,13 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetch(`${BASE}/api/share`).then(r=>r.json()),
     fetch(`${BASE}/api/segments`).then(r=>r.json()),
     fetch(`${BASE}/api/trends`).then(r=>r.json()),
-    fetch(`${BASE}/api/declining`).then(r=>r.json()),
   ]);
   renderKPIs(kpis);
   renderMarket(market);
   renderTop(top);
   renderGrowth(growth);
-  renderDeclining(declining);
   renderShare(share);
   renderSegs(segs);
   renderTrends(trendData);
@@ -105,74 +103,28 @@ function renderTop(data){
                y:{grid:{display:false},ticks:{font:{size:10}}} } }
   });
   /* HTML favicon strip */
-  const leg=$('top-logos'); if(!leg)return;
-  leg.innerHTML=data.slice(0,10).map((d,i)=>{
-    const dom=LOGOS[d.actor];
-    return `<span class="logo-strip-item">${dom?`<img src="${fav(dom)}" alt="" onerror="this.style.display='none'">`:`<span class="dot" style="background:${PAL[i%PAL.length]}"></span>`}${d.actor}</span>`;
-  }).join('');
+  // const leg=$('top-logos'); if(!leg)return;
+  // leg.innerHTML=data.slice(0,10).map((d,i)=>{
+  //   const dom=LOGOS[d.actor];
+  //   return `<span class="logo-strip-item">${dom?`<img src="${fav(dom)}" alt="" onerror="this.style.display='none'">`:`<span class="dot" style="background:${PAL[i%PAL.length]}"></span>`}${d.actor}</span>`;
+  // }).join('');
 }
 
 /* ── Growth ── */
 function renderGrowth(data){
   const ctx=$('c-growth'); if(!ctx)return; destroy('growth');
   const d12=data.slice(0,12);
-  /* Fixed height for consistent 3-col row */
-  const wrap=ctx.closest('.chart-box');
-  if(wrap){ wrap.style.height=''; }  // use CSS .tall = 360px
   charts.growth = new Chart(ctx,{
     type:'bar',
     data:{ labels:d12.map(d=>d.actor), datasets:[{ data:d12.map(d=>d.pct),
-      backgroundColor:d12.map(d=>d.pct>=0?'rgba(26,158,92,.85)':'rgba(192,57,43,.85)'),
-      borderWidth:0, borderRadius:2, barPercentage:0.72, categoryPercentage:0.85 }] },
+      backgroundColor:d12.map(d=>d.pct>=0?'rgba(26,158,92,.85)':'rgba(192,57,43,.85)'), borderWidth:0, borderRadius:2 }] },
     options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{
-        label:c=>`  ${c.raw>0?'+':''}${c.raw}%`,
-        afterLabel:c=>{ const d=d12[c.dataIndex]; return [`  Q4 2021: ${fmt(d.v21)}`, `  Q4 2022: ${fmt(d.v22)}`]; }
+        label:c=>`  Growth: ${c.raw>0?'+':''}${c.raw}%`,
+        afterLabel:c=>{ const d=d12[c.dataIndex]; return [`  2021: ${fmt(d.v21)}`,' → ',`  2022: ${fmt(d.v22)}`]; }
       }}},
-      scales:{ x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{callback:v=>v+'%',font:{size:9}}},
-               y:{grid:{display:false},ticks:{font:{size:9}}} } }
-  });
-}
-
-/* ── Declining platforms ── */
-function renderDeclining(data){
-  const ctx=$('c-declining'); if(!ctx||!data||!data.length)return; destroy('declining');
-  const sorted=[...data].sort((a,b)=>a.pct-b.pct);
-  /* Use CSS .tall height — consistent with growth chart in same row */
-  const wrap=ctx.closest('.chart-box');
-  if(wrap){ wrap.style.height=''; }
-
-  charts.declining = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels: sorted.map(d=>d.actor),
-      datasets:[{
-        data: sorted.map(d=>d.pct),
-        backgroundColor: sorted.map(()=>'rgba(192,57,43,.82)'),
-        borderWidth:0, borderRadius:2,
-        barPercentage:0.72, categoryPercentage:0.85,
-      }]
-    },
-    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{...TT, callbacks:{
-          label: c=>`  Change: ${c.raw}%`,
-          afterLabel: c=>{
-            const d=sorted[c.dataIndex];
-            return [`  Start: ${fmt(d.v_first)} (${d.d_first})`, `  End: ${fmt(d.v_last)} (${d.d_last})`];
-          }
-        }}
-      },
-      scales:{
-        x:{
-          grid:{color:'rgba(0,0,0,0.04)'},
-          ticks:{callback:v=>v+'%', font:{size:9}},
-          max:0,
-        },
-        y:{grid:{display:false}, ticks:{font:{size:9}}}
-      }
-    }
+      scales:{ x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{callback:v=>v+'%',font:{size:10}}},
+               y:{grid:{display:false},ticks:{font:{size:10}}} } }
   });
 }
 
@@ -238,7 +190,7 @@ function renderRH(market, top, growth, trendRaw){
                y:{display:true,ticks:{color:'#555',font:{size:8},callback:v=>fmtM(v)},grid:{color:'rgba(0,0,0,0.06)'}} } }
   });
 
-  /* RH2: top-5 vertical bar — x-axis labels hidden, icons shown in HTML strip below */
+  /* RH2: top-5 vertical bar — logos as HTML strip below */
   const c2=$('rh-top5');
   if(c2){
     const t5=top.slice(0,5);
@@ -247,23 +199,15 @@ function renderRH(market, top, growth, trendRaw){
       data:{ labels:t5.map(d=>d.actor), datasets:[{ data:t5.map(d=>d.subs),
         backgroundColor:PAL.slice(0,5), borderWidth:0, borderRadius:3 }] },
       options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>'  '+fmt(c.raw)+' subscribers'}} },
-        scales:{
-          x:{ display:false },   // ← hidden: labels shown in HTML strip below instead
-          y:{ grid:{color:'rgba(0,0,0,0.06)'},ticks:{callback:v=>fmtM(v),font:{size:8}} }
-        }
-      }
+        plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>' '+fmt(c.raw)}} },
+        scales:{ x:{grid:{display:false},ticks:{font:{size:8},color:'#555',maxRotation:0,callback:(_,i)=>t5[i]?.actor.split(' ')[0]}},
+                 y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{callback:v=>fmtM(v),font:{size:8}}} } }
     });
-    /* Icon + name strip — rendered in HTML outside canvas */
     const strip=$('rh-top5-icons');
     if(strip) strip.innerHTML=t5.map((d,i)=>{
       const dom=LOGOS[d.actor];
-      // Short display name: first word only for space
-      const shortName = d.actor.split(' ')[0];
-      const icon=dom
-        ?`<img src="${fav(dom)}" title="${d.actor}" style="width:22px;height:22px;border-radius:3px;border:1px solid #ddd;display:block;margin:0 auto 3px;" onerror="this.style.display='none'">`
-        :`<span style="width:22px;height:22px;border-radius:3px;background:${PAL[i]};display:block;margin:0 auto 3px;"></span>`;
-      return `<div style="text-align:center;flex:1;">${icon}<span style="font-size:9px;font-weight:700;color:#555;display:block;line-height:1.2;">${shortName}</span></div>`;
+      return dom?`<img src="${fav(dom)}" title="${d.actor}" style="width:20px;height:20px;border-radius:3px;border:1px solid #eee;" onerror="this.style.display='none'">`
+               :`<span style="width:20px;height:20px;border-radius:3px;background:${PAL[i]};display:inline-block;" title="${d.actor}"></span>`;
     }).join('');
   }
 
