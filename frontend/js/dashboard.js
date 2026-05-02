@@ -92,18 +92,64 @@ function renderMarket(data){
   });
 }
 
-/* ── Top platforms ── */
+/* ── Top platforms — dynamic height, scrollable at large N ── */
 function renderTop(data){
   const ctx=$('c-top'); if(!ctx)return; destroy('top');
+  const n = data.length;
+
+  /* 38px per bar gives proper bar weight — same look regardless of N */
+  const canvasH = n * 38 + 50;
+  ctx.style.height = canvasH + 'px';
+  ctx.style.width  = '100%';
+  ctx.height = canvasH;
+
   charts.top = new Chart(ctx,{
     type:'bar',
-    data:{ labels:data.map(d=>d.actor), datasets:[{ data:data.map(d=>d.subs),
-      backgroundColor:data.map((_,i)=>PAL[i%PAL.length]), borderWidth:0, borderRadius:2 }] },
-    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>'  Subscribers: '+fmt(c.raw)}} },
-      scales:{ x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{callback:v=>fmtM(v),font:{size:10}}},
-               y:{grid:{display:false},ticks:{font:{size:10}}} } }
+    data:{
+      labels: data.map(d=>d.actor),
+      datasets:[{
+        data: data.map(d=>d.subs),
+        backgroundColor: data.map((_,i)=>PAL[i%PAL.length]),
+        borderWidth: 0,
+        borderRadius: 2,
+        /* Chart.js defaults: barPercentage=0.8, categoryPercentage=0.8 — feels solid */
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive: false,           /* canvas drives its own size; scroll wrapper clips */
+      maintainAspectRatio: false,
+      animation:{ duration:600 },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{...TT, callbacks:{
+          label: c => '  Subscribers: ' + fmt(c.raw),
+          afterLabel: c => `  Market share: ${(c.raw/510268406*100).toFixed(1)}%`
+        }}
+      },
+      scales:{
+        x:{
+          grid:{ color:'rgba(0,0,0,0.05)' },
+          ticks:{ callback:v=>fmtM(v), font:{ size:11, family:"'Lato',Arial,sans-serif" }, maxTicksLimit:6 }
+        },
+        y:{
+          grid:{ display:false },
+          ticks:{ font:{ size:11, family:"'Lato',Arial,sans-serif" }, padding:4 }
+        }
+      }
+    }
   });
+
+  /* Favicon legend below chart — wraps naturally */
+  const leg=$('top-logos'); if(!leg)return;
+  leg.innerHTML=data.map((d,i)=>{
+    const dom=LOGOS[d.actor];
+    return `<span class="logo-strip-item">${dom
+      ? `<img src="${fav(dom)}" alt="" onerror="this.style.display='none'">`
+      : `<span class="dot" style="background:${PAL[i%PAL.length]}"></span>`
+    }${d.actor}</span>`;
+  }).join('');
+}
 
 /* ── Growth ── */
 function renderGrowth(data){
