@@ -310,7 +310,7 @@ async function init(){
       }]},
       options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{...TT,callbacks:{
-          label:c=>`  Change: ${c.raw}%`,
+          label:c=>`  ${c.raw}%`,
           afterLabel:c=>`  ${fmt(sorted[c.dataIndex].v_first)} → ${fmt(sorted[c.dataIndex].v_last)}`
         }}},
         scales:{
